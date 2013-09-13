@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:b="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+    ">
+    <import resource="Spring-secruity-bean.xml"></import>
+    <bean id="mySecurityFilter" class="com.ceit.filter.MySecurityFilter"
+          p:authenticationManager-ref="myAuthenticationManager"
+          p:accessDecisionManager-ref="myAccessDecisionManager"
+          p:filterInvocationSecurityMetadataSource-ref="myInvocationSecurityMetadataSourceService"
+            >
+    </bean>
+     <!--打开全局注解-->
+    <b:http  pattern="/login.html" security="none" ></b:http>
+    <b:http  pattern="/images/**" security="none" ></b:http>
+    <b:http  pattern="/js/**" security="none" ></b:http>
+    <b:http pattern="/login" security="none"></b:http>
+    <b:http pattern="/time_out" security="none"></b:http>
+    <b:http pattern="/**/**.jsp" security="none" >
+    </b:http>
+     <!--spring security 3 设置auto-config =true时，会配置十个默认过滤器 -->
+     <!--
+     invalidate-session 是Session失效
+    logout-sucess成功退出后重定向的URL
+    logut-url 执行退出登录的链接
+     -->
+    <b:http auto-config="false" >
+        <!--没有权限是调用的类-->
+        <b:access-denied-handler ref="myAccessDeniedHandler"></b:access-denied-handler>
+        <b:logout logout-url="/logout_Sec"  invalidate-session="true"
+                  logout-success-url="/" success-handler-ref=""
+                delete-cookies="JSESSIONID"></b:logout>
+        <b:form-login login-page="/login.html"
+                      always-use-default-target="true" ></b:form-login>
+        <!--<b:custom-filter ref="myFilter" before="SECURITY_CONTEXT_FILTER"></b:custom-filter>-->
+        <b:custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER"></b:custom-filter>
+        <b:custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"></b:custom-filter>
+        <b:intercept-url pattern="/**" access="ROLE_LOGIN"></b:intercept-url>
+        <b:session-management  >
+            <b:concurrency-control max-sessions="1"
+                                   error-if-maximum-exceeded="true"/>
+        </b:session-management>
+            </b:http>
+    <b:authentication-manager alias="myAuthenticationManager">
+        <b:authentication-provider user-service-ref="myUserDetailServiceImpl" />
+    </b:authentication-manager>
+
+    <bean id="loginFilter" class="com.ceit.filter.MyUsernamePasswordAuthenticationFilter"
+            p:filterProcessesUrl="/login_Sec"
+            p:authenticationSuccessHandler-ref="MySimpleUrlAuthenticationSuccessHandler"
+            p:authenticationFailureHandler-ref="mySimpleUrlAuthenticationFailureHandler"
+            p:authenticationManager-ref="myAuthenticationManager">
+    </bean>
+    <!--未登录人员的切入点-->
+
+</beans>

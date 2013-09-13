@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:b="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+    ">
+<!--各种bean-->
+    <!--把资源与权限的关系建立起来-->
+    <bean id="myInvocationSecurityMetadataSourceService"
+          class="com.ceit.serviceImpl.MyInvocationSecurityMetadataSourceService"></bean>
+    <bean id="myAccessDeniedHandler"
+          class="com.ceit.serviceImpl.MyAccessDeniedHandler"></bean>
+     <!--决定用户是否有权限去访问资源-->
+    <bean id="myAccessDecisionManager"
+          class="com.ceit.serviceImpl.MyAccessDecisionManager"></bean>
+
+    <!--登录失败之后的处理-->
+    <bean id="mySimpleUrlAuthenticationFailureHandler"
+          class="com.ceit.hanlder.MySimpleUrlAuthenticationFailureHandler">
+        <!-- 可以配置相应的跳转方式。属性forwardToDestination为true采用forward false为sendRedirect -->
+    </bean>
+    <!--登录成功之后调用的-->
+    <bean id="MySimpleUrlAuthenticationSuccessHandler"
+          class="com.ceit.hanlder.MySimpleUrlAuthenticationSuccessHandler"></bean>
+    <!--用来加载用户的所有权限-->
+    <bean id="myUserDetailServiceImpl"
+          class="com.ceit.serviceImpl.MyUserDetailServiceImpl"></bean>
+</beans>

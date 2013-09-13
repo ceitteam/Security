@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+    <session-factory>
+        <property name="dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+        <property name="connection.url">
+            jdbc:mysql://localhost/security
+        </property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">qq123456</property>
+        <property name="connection.driver_class">
+            com.mysql.jdbc.Driver
+        </property>
+        <property name="javax.persistence.validation.mode">none</property>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="current_session_context_class">thread</property>
+        <!--设置隔离级别  并发的控制
+            1 ：读未提交数据
+            2：读已提交数据 一般选择这个级别
+            3：可重复读
+            4：序列化
+        -->
+        <property name="hibernate.connection.isolation">2</property>
+        <property name="c3p0.max_size">1000</property>
+
+            <property name="c3p0.min_size">10</property>
+            <property name="c3p0.timeout">100</property>
+        <property name="c3p0.max_size">3000</property>
+            <property name="c3p0.min_size">200</property>
+        <property name="jdbc.batch_size">30</property>
+        <property name="jdbc.batch_versioned_data">true</property>
+        <property name="cache.use_second_level_cache">false</property>
+        <mapping class="com.ceit.bean.Operate"></mapping>
+        <mapping class="com.ceit.bean.Permission"></mapping>
+        <mapping class="com.ceit.bean.User"></mapping>
+        <mapping class="com.ceit.bean.Role"></mapping>
+        <mapping class="com.ceit.bean.Permission"></mapping>
+        <mapping class="com.ceit.bean.User_Group_Role"></mapping>
+    </session-factory>
+
+</hibernate-configuration>
